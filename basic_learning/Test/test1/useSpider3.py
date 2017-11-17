@@ -1,23 +1,38 @@
-#/usr/bin/env python3
+#!/usr/bin/env python3
 # coding: utf-8 -*-
 import re
 import requests
 
+url = 'https://github.com/timeline.json'
+response1 = requests.get(url)
+header = response1.headers
 
-# 1. 用findall查找所有
-# url = "http://www.jianshu.com/p/74b94eadae15"
-# result = requests.get(url).text
-# code = re.findall('<code.*?>(.*?)</code>',result,re.S)
-# for item in code:
-#     print(item,'\n')
-# print(111111111111111111111111111)
+info = []
+for headerItem in header:
+    temp = []
+    temp.append(headerItem)
+    if len(header.get(headerItem)) < 40:
+        temp.append(header.get(headerItem))
+    else:
+        temp.append('too long')
+    info.append(tuple(temp))
+
+info = tuple(info)
+
+# print(response1.status_code)
+# json = response1.json()
+# for jsonItem in json:
+#     print(jsonItem,":",json.get(jsonItem))
 
 
-url2 = "http://www.imooc.com/"
-result2 = requests.get(url2).text
-code2 = re.findall('<h3.*?>(.*?)</h3>',result2,re.S)
-for item2 in code2:
-    if len(item2) <=50:
-        print(item2)
-print(len(code2))
+####################################
+# post请求
+# payload = {'key1':'value1','key2':'value2'}
+# response2 = requests.post("http://httpbin.org/post",data=payload)
+# print(response2.content.decode())
+
+
+
+
+
 
