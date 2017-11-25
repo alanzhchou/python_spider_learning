@@ -23,3 +23,4 @@ class RequestReg(object):
             info.append(tuple(temp))
         info = tuple(info)
         return info
+

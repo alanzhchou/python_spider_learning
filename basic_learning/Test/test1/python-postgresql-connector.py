@@ -42,6 +42,7 @@ try:
 
     str1 = "insert into spider_test (first_name,last_name) VALUES (%s,%s);"
     cur.executemany(str1,info)
+    cur.close()
     conn.commit()
 
     cur.execute("select * from public.spider_test;")

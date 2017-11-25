@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import psycopg2
-import requestUseReg
 
 class SimpleSpider(object):
     def __init__(self,host,port,dbname,user,passwd):
@@ -49,22 +48,6 @@ class SimpleSpider(object):
         except psycopg2.DatabaseError as e:
             self.__errorDuringUse()
 
-# simple = SimpleSpider('39.108.56.218','5432','spider','pythonsp','pythonsp@123')
-# # simple.test_connect()
-#
-# info = requestUseReg.RequestReg().getInfo()
-#
-# # str1 = "insert into spider_test (first_name,last_name) VALUES (%s,%s);"
-# # simple.directExcuteMany(str1,info)
-#
-# simple.directExcuteSingle("select * from spider_test ORDER by id;")
-
 simple = SimpleSpider('39.108.56.218','5432','csyllabus','csyllabus','csyllabus@123')
 simple.test_connect()
-simple.directExcuteSingle("select password from cs_user where name in ('heng');")
-
-
-
-
-
-
+simple.directExcuteSingle("select password from cs_user where name in ('heng1');")
