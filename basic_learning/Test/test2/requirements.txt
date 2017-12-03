@@ -1,0 +1,96 @@
+目标网站：淘女郎-美人库
+目标网址：https://mm.taobao.com/search_tstar_model.htm
+
+爬取要求：
+获得淘女郎官方所有模特的：
+美人库首页：https://mm.taobao.com/search_tstar_model.htm
+    姓名
+    身高
+    体重
+    城市
+    点赞数
+
+个人爱秀页面：https://mm.taobao.com/self/aiShow.htm?userId=176817195
+    ***************************************需要对内容进行一定分析
+        QQ
+        微信
+        电话
+
+个人模特卡页面：https://mm.taobao.com/self/model_info.htm?user_id=176817195
+    职业
+    生日
+    血型
+    学校
+    院系
+    专业
+    风格
+    三围
+    穿衣尺码
+    鞋码
+    关注其他数
+    粉丝数
+    活跃度
+    拍片次数
+    服务态度（5.0高于5.57%）
+    价格相符度（5.0高于5.61%）
+    专业素质（5.0高于5.66%）
+
+从userId跳转到个人相册页面
+多相册页面：https://mm.taobao.com/self/model_album.htm?user_id=176817195
+
+选取各相册的id，跳转到对应的相册图片的页面
+相册瀑布：https://mm.taobao.com/self/album_photo.htm?user_id=176817195&album_id=10000962815
+
+对相册页面内的图片截取url进行转化，生成完整图片的URL
+相册图片最终转化：https://img.alicdn.com/imgextra/i1/176817195/TB1jFcMKFXXXXblXFXXXXXXXXXX_!!0-tstar.jpg
+   图片URL
+
+并存入postgreSQL数据库：mm_taobao
+两张表：
+
+1.mm_info：
+
+id：prm—key
+userID:integer notnull unique
+姓名:varchar(30)  notnull default:xx
+身高:smallInt notnull default:0
+体重:smallInt notnull default:0
+城市:varchar(30)  notnull default:xx
+点赞数:integer notnull default:0
+QQ:varchar(15)
+微信:varchar(30)
+电话:varchar(15)
+职业:varchar(30)
+生日:date
+血型:char(2)
+学校:varchar(50)
+院系:varchar(50)
+专业:varchar(50)
+风格:varchar(30)
+三围:varchar(15)
+穿衣尺码:varchar(5)
+鞋码:smallInt
+关注其他数:smallInt
+粉丝数:integer
+活跃度:smallInt
+拍片次数:smallInt
+服务态度:json(high-real-real)-(高/低/平-5.0-5.57%))
+价格相符度：json((high-real-real)-(高/低/平-5.0-5.61%))
+专业素质：json((high-real-real)-(高/低/平-5.0-5.66%))
+入库时间：date
+
+2.mm_album
+id：prm—key
+所属用户：'id：prm—key'-外键关联mm_info的id
+相册URL:varchar(200)  notnull unique
+入库时间：date
+
+3.mm_photo
+id：prm—key
+所属用户：'id：prm—key'-外键关联mm_info的id
+所属相册：'id：prm—key'-外键关联mm_album的id
+图片URL:varchar(300)  notnull unique
+入库时间：date
+
+数据库连接信息
+conn = psycopg2.connect("host=39.108.56.218 port=5432 dbname=spider user=pythonsp password=pythonsp@123")
