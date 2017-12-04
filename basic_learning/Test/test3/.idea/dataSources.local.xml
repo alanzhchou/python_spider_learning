@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="earthquakedb@39.108.56.218" uuid="442d3ae5-4cf8-4d73-9c42-9bca23f17b2d">
+      <database-info product="PostgreSQL" version="9.5.10" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.1.1">
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>earthquake</user-name>
+      <introspection-schemas>earthquakedb:public</introspection-schemas>
+    </data-source>
+  </component>
+</project>

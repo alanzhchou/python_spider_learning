@@ -1,0 +1,14 @@
+INSERT INTO quakes (id, UTC_date, latitude, longitude, depth, magnitude, region, area_id)
+VALUES (624125, '2017-10-14 13:07:58.3', 34.91, -120.67, 9, 2.1, 'CENTRAL CALIFORNIA', 6);
+
+爬取Latest Earthquakes in the world网站，获取最近地震信息存入postgresql数据库
+网址
+https://www.emsc-csem.org/Earthquake/?view=1
+
+暂时需求：view = 1-2000
+每页  50个tr
+每行  6个采取字段 8个存储字段
+共100000行，600000个采取字段，800000个存储字段
+
+
+

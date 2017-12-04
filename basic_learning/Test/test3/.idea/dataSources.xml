@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="earthquakedb@39.108.56.218" uuid="442d3ae5-4cf8-4d73-9c42-9bca23f17b2d">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://39.108.56.218:5432/earthquakedb</jdbc-url>
+    </data-source>
+  </component>
+</project>
