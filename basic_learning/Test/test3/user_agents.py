@@ -41,5 +41,5 @@ class userAgents(object):
         return self.__agents[rand]
 
 
-
-
+agent = userAgents()
+print(agent.getRandomAgent())

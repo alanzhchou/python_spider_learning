@@ -4,13 +4,15 @@
 # __author__: ZH-AlanChou
 # __time__: 2017/12/4
 # __version__: 1.0
-from time import ctime,sleep
+from time import ctime
 import re
 import threading
 import requests
 from bs4 import BeautifulSoup
-import user_agents
+
 import pgSQL
+import user_agents
+import sqlite3
 
 class earthquakeSp(object):
     def __init__(self):
