@@ -62,7 +62,6 @@ class PageRank(object):
     def __nameToIndex(self,info):
         return self.searchIndex.index(info)
 
-
 class MatrixUtils(object):
     def __init__(self):
         pass
