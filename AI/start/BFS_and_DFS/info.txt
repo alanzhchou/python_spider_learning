@@ -1,0 +1,42 @@
+"Arad"  "Bucharest" "Craiova" "Dobreta" "Eforie" "Fagaras" "Giurgiu" "Hirsova" "Iasi"
+"Lugoj" "Mehadia" "Neamt" "Oradea" "Pitesti" "Rimnicu Vilcea" "sibiu" "Timisoara"
+"Urziceni" "Vaslui" "Zerind"
+
+{
+"Arad":{"Zerind":75,"sibiu":140,"Timisoara":118},
+"Zerind":{"Arad":75,"Oradea":71},
+"Oradea":{"Zerind":71,"sibiu":151},
+"sibiu":{"Arad":140,"Oradea":151,"Rimnicu Vilcea":80,"Fagaras":99},
+"Fagaras":{"sibiu":99,"Bucharest":211},
+"Timisoara":{"Arad":118,"Lugoj":111},
+"Lugoj":{"Timisoara":111,"Mehadia":70},
+"Mehadia":{"Lugoj":70,"Dobreta":75},
+"Dobreta":{"Mehadia":75,"Craiova":120},
+"Craiova":{"Dobreta":120,"Rimnicu Vilcea":146,"Pitesti":138},
+"Rimnicu Vilcea":{"sibiu":80,"Pitesti":97,"Craiova":146},
+"Pitesti":{"Rimnicu Vilcea":97,"Craiova":138,"Bucharest":101},
+"Bucharest":{"Pitesti":101,"Fagaras":211}
+}
+
+{
+"Arad":366,
+"Bucharest":0,
+"Craiova":160,
+"Dobreta":242,
+"Eforie":161,
+"Fagaras":178,
+"Giurgiu":77,
+"Hirsova":151,
+"Iasi":226,
+"Lugoj":244,
+"Mehadia":241,
+"Neamt":234,
+"Oradea":380,
+"Pitesti":98,
+"Rimnicu Vilcea":193,
+"sibiu":253,
+"Timisoara":329,
+"Urziceni":80,
+"Vaslui":199,
+"Zerind":374
+}

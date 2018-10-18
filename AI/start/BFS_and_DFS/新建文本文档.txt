@@ -1,0 +1,17 @@
+Queue	Expored_min_path	Route
+A: FA	A		BDE
+
+弹出 A 查看Expored_min_path	中无BDE	           加入BDE	更新Expored_min_path
+
+B:FB, D:FD, E:FE	A A-B A-D A-E	BDE
+FB<FE<FD
+
+
+弹出B （查找A+B-DE 距离 与A-D,A-E对比）比如A-B-E < A-E 
+	查看Expored_min_path中有E有A 无C	查看ABDE是否存在到C的路径并比较最小距离(如A-B-C<A-B-E-C) 加入C      更新Expored_min_path
+D:FD E:FE	C:FC	更新Expored_min_path
+		A A-B A-D A-B-E A
+
+
+
+
