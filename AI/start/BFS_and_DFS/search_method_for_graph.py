@@ -191,8 +191,8 @@ class Graph(object):
                     explored_paths[min_key] = {"path": path, "min_distance": min_distance}
                     del start_node_route[min_key]
 
-                for node in explored_paths:
-                    explored_paths[node]["path"].insert(0,start_node_name)
+                # for node in explored_paths:
+                #     explored_paths[node]["path"].insert(0,start_node_name)
                 return explored_paths[end_node_name]
         return None
 
@@ -366,7 +366,7 @@ if __name__ == "__main__":
         }
 
     start1 = time.clock()
-    # print(graph.dijkstra("Arad","Bucharest"))
+    print(graph.dijkstra("Arad","Bucharest"))
     graph.dijkstra("Arad", "Bucharest")
     stop1 = time.clock()
     print("time: %f"%(stop1-start1))
