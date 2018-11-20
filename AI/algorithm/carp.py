@@ -7,7 +7,6 @@
 # python_version: 3.62
 
 from utils import InputParser as Parser
-from utils import output_list
 
 class CARP(object):
     def __init__(self,info):
@@ -21,19 +20,22 @@ class CARP(object):
         self.shortest_paths = parser.get_shortest_paths()#dict
 
     def demand(self,ele):
-        return ele[2]
+        return ele[3]
 
     def carp(self):
+        capacity = self.capacity
+        paths = self.shortest_paths
+
         # initial free list
         free = []
         for start in self.demands:
             for end in self.demands[start]:
-                free.append([start,end,self.demands[start][end]])
+                # start end cost demand
+                free.append([start,end,self.demands[start][end][0],self.demands[start][end][1]])
         free.sort(key=self.demand)
 
         # find routes
         routes = []
-        capacity = self.capacity
         while len(free) !=0:
             new_route = []
             temp_capacity = 0
@@ -41,8 +43,8 @@ class CARP(object):
             while temp_capacity < capacity:
                 founded = False
                 for demand in free:
-                    if demand[2] + temp_capacity <= capacity:
-                        temp_capacity += demand[2]
+                    if demand[3] + temp_capacity <= capacity:
+                        temp_capacity += demand[3]
                         new_route.append(demand)
                         founded = True
                         break
@@ -52,30 +54,32 @@ class CARP(object):
                     break
             routes.append(new_route)
 
-        print(routes[0])
-
-        # find path between route
-        paths = self.shortest_paths
+        # find path cost along route
         cost = 0
         for route in routes:
-            print("start:",self.depot)
+            print(route)
+
+            # deal with the first demand either start with depot or not
+            if route[0][0] == self.depot:
+                cost += route[0][2]
+            else:
+                cost += paths[self.depot][route[0][0]]["distance"]
+                cost += route[0][2]
+
             for index in range(len(route)-1):
                 this_demand = route[index]
                 next_demand = route[index + 1]
 
-                if index == 0:
-                    if this_demand[0] == self.depot:
-                        print("from",self.depot,"to",this_demand[1],"demand_cost:",paths[self.depot][this_demand[1]]["distance"])
-                    else:
-                        print("from", self.depot, "to", this_demand[0],"path_cost:",paths[self.depot][this_demand[0]]["distance"])
-                        print("from", this_demand[0], "to", this_demand[1], "demand_cost:",paths[this_demand[0]][this_demand[1]]["distance"])
-
+                # if this_demand connect with next or not
                 if this_demand[1] == next_demand[0]:
-                    print("from",this_demand[1],"to", next_demand[1], "demand_cost:", paths[this_demand[1]][next_demand[1]]["distance"])
+                    cost += next_demand[2]
                 else:
-                    print("from", this_demand[1], "to", next_demand[0], "path_cost:", paths[this_demand[1]][next_demand[0]]["distance"])
-                    print("from", next_demand[0], "to", next_demand[1], "demand_cost:", paths[next_demand[0]][next_demand[1]]["distance"])
-                print()
+                    cost += paths[this_demand[1]][next_demand[0]]["distance"]
+                    cost += next_demand[2]
+
+            #deal with the last one to depot
+            cost += paths[next_demand[1]][self.depot]["distance"]
+        print(cost)
 
     def __str__(self):
         demands = "\n"
@@ -266,10 +270,10 @@ NODES       COST         DEMAND
 9   11   14       1
 10   11   12       1'''
 
-    carp = CARP(test2.split("\n"))
-    carp.carp()
-
-    print()
+    # carp = CARP(test2.split("\n"))
+    # carp.carp()
+    #
+    # print()
 
     carp = CARP(sample.split("\n"))
     carp.carp()

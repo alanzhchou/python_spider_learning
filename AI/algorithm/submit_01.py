@@ -2,22 +2,13 @@
 # -*- coding: utf-8 -*-
 
 # Author: Alan-11510 
-# Date: 2018/11/18
+# Date: 2018/11/21
 # version: 1.0
 # python_version: 3.62
 
 import sys
 import copy
 import re
-
-def output_dict(data):
-    data = dict(data)
-    for key in data:
-        print(key,"\t",data[key])
-
-def output_list(data):
-    for item in data:
-        print(item)
 
 class Dis(object):
     def __init__(self,graph):
@@ -192,25 +183,104 @@ class InputParser(object):
                 self.non_required_edges, self.vehicles, self.capacity, self.total_cost_of_required_edges,
                 graph)
 
+class CARP(object):
+    def __init__(self,info):
+        parser = InputParser(info)
+
+        self.nodes = parser.get_node_names()#list
+        self.depot = parser.get_depot()#int
+        self.capacity = parser.get_capacity()#int
+        self.vehicles = parser.get_vehicles()#int
+        self.demands = parser.get_demands()#dict
+        self.shortest_paths = parser.get_shortest_paths()#dict
+
+    def demand(self,ele):
+        return ele[3]
+
+    def carp(self):
+        capacity = self.capacity
+        paths = self.shortest_paths
+
+        # initial free list
+        free = []
+        for start in self.demands:
+            for end in self.demands[start]:
+                # start end cost demand
+                free.append([start,end,self.demands[start][end][0],self.demands[start][end][1]])
+        free.sort(key=self.demand)
+
+        # find routes
+        routes = []
+        while len(free) !=0:
+            new_route = []
+            temp_capacity = 0
+
+            while temp_capacity < capacity:
+                founded = False
+                for demand in free:
+                    if demand[3] + temp_capacity <= capacity:
+                        temp_capacity += demand[3]
+                        new_route.append(demand)
+                        founded = True
+                        break
+                if founded:
+                    free.remove(demand)
+                else:
+                    break
+            routes.append(new_route)
+
+        print("s",end=" ")
+        # find path cost along route
+        cost = 0
+        for route in routes:
+            print(0,end=",")
+            for demand in route:
+                body = "("+ str(demand[0]) + "," + str(demand[1]) + "),"
+                print(body,end="")
+            if route == routes[len(routes)-1]:
+                print(end="0")
+            else:
+                print(end="0,")
+
+            # deal with the first demand either start with depot or not
+            if route[0][0] == self.depot:
+                cost += route[0][2]
+            else:
+                cost += paths[self.depot][route[0][0]]["distance"]
+                cost += route[0][2]
+
+            for index in range(len(route)-1):
+                this_demand = route[index]
+                next_demand = route[index + 1]
+
+                # if this_demand connect with next or not
+                if this_demand[1] == next_demand[0]:
+                    cost += next_demand[2]
+                else:
+                    cost += paths[this_demand[1]][next_demand[0]]["distance"]
+                    cost += next_demand[2]
+
+            #deal with the last one to depot
+            cost += paths[next_demand[1]][self.depot]["distance"]
+        print()
+        print("q",cost)
+
+    def __str__(self):
+        demands = "\n"
+        for key in self.demands:
+            demands += str(key) + " : " + str(self.demands[key]) + "\n"
+
+        shortest_paths = "\n"
+        for key in self.shortest_paths:
+            shortest_paths += str(key) + " : " + str(self.shortest_paths[key]) + "\n"
+
 if __name__ == '__main__':
-    info = \
-'''NAME : sample
-VERTICES : 8
-DEPOT : 1
-REQUIRED EDGES : 5
-NON-REQUIRED EDGES : 5
-VEHICLES : 2
-CAPACITY : 6
-TOTAL COST OF REQUIRED EDGES : 13
-NODES       COST         DEMAND
-1   2        4              0
-2   3        2              3
-3   4        3              3
-1   4        4              0
-4   5        7              0
-5   6        2              2
-6   7        3              2
-7   8        3              2
-1   8        1              0
-1   5        3              0'''
-    a = InputParser(info.split("\n"))
+    info = []
+    temp = input()
+
+    while temp != "END":
+        info.append(temp)
+        temp = input()
+
+    carp = CARP(info)
+    carp.carp()
