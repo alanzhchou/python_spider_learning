@@ -5,6 +5,7 @@
 # Date: 2018/11/19
 # version: 1.0
 # python_version: 3.62
+import sys
 
 from utils import InputParser as Parser
 
@@ -40,22 +41,42 @@ class CARP(object):
             new_route = []
             temp_capacity = 0
 
+            # 空时 假设上一个为 首尾都是出发点的 cost,demand 都是0的 demand
+            last_demand = [self.depot, self.depot, 0, 0]
             while temp_capacity < capacity:
-                founded = False
+                # 当前需求为第一个 当前距离为最大值，之后就算遍历第一个也会将距离修改过来
+                temp_demand = free[0]
+                temp_distance = sys.maxsize
+
+                found = False
                 for demand in free:
+                    # 所有满足条件的需求
                     if demand[3] + temp_capacity <= capacity:
-                        temp_capacity += demand[3]
-                        new_route.append(demand)
-                        founded = True
-                        break
-                if founded:
-                    free.remove(demand)
-                else:
+                        # 如果和上个需求首尾相接，直接加入
+                        if demand[0] == last_demand[1]:
+                            temp_capacity += demand[3]
+                            new_route.append(demand)
+                            last_demand = demand
+                            found = True
+                            break
+                        # 否则遍历比较 选择距离上个需求终点最近的需求
+                        elif paths[last_demand[1]][demand[0]]["distance"] < temp_distance:
+                            temp_demand = demand
+                            temp_distance = paths[last_demand[1]][demand[0]]["distance"]
+
+                if not found:
+                    temp_capacity += temp_demand[3]
+                    new_route.append(temp_demand)
+                    last_demand = temp_demand
+                    found = True
+
+                free.remove(last_demand)
+                if len(free) == 0:
                     break
             routes.append(new_route)
-
         # find path cost along route
         cost = 0
+        i = 0
         for route in routes:
             print(route)
 
@@ -78,7 +99,8 @@ class CARP(object):
                     cost += next_demand[2]
 
             #deal with the last one to depot
-            cost += paths[next_demand[1]][self.depot]["distance"]
+            if next_demand[1] != self.depot:
+                cost += paths[next_demand[1]][self.depot]["distance"]
         print(cost)
 
     def __str__(self):
@@ -270,11 +292,42 @@ NODES       COST         DEMAND
 9   11   14       1
 10   11   12       1'''
 
-    # carp = CARP(test2.split("\n"))
-    # carp.carp()
-    #
-    # print()
+    test3 = \
+'''NAME : gdb10
+VERTICES : 12
+DEPOT : 1
+REQUIRED EDGES : 25
+NON-REQUIRED EDGES : 0
+VEHICLES : 4
+CAPACITY : 10
+TOTAL COST OF REQUIRED EDGES : 252
+NODES       COST         DEMAND
+1   8   9       1
+1   9   4       2
+1   10   13       1
+1   11   12       2
+2   1   11       1
+2   3   15       1
+2   4   18       2
+2   5   8       2
+3   4   8       2
+3   8   18       2
+3   9   6       1
+4   1   7       1
+4   6   10       2
+4   11   17       1
+5   1   9       2
+5   6   15       1
+6   11   3       2
+7   2   6       1
+7   4   11       2
+7   5   5       1
+8   9   14       2
+8   12   5       1
+9   10   19       1
+10   12   2       2
+11   12   7       1'''
 
-    carp = CARP(sample.split("\n"))
+    carp = CARP(test3.split("\n"))
     carp.carp()
 

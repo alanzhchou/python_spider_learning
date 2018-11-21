@@ -141,30 +141,6 @@ class InputParser(object):
     def get_shortest_paths(self):
         return self.shortest_paths
 
-    # def get_str_capacity(self):
-    #     return str(self.capacity)
-    #
-    # def get_str_demands(self):
-    #     result = ""
-    #     for path in self.demands:
-    #         result += (str(path) + " : " + str(self.demands[path]) + "\n")
-    #     return result
-    #
-    # def get_str_shortest_paths(self):
-    #     result = ""
-    #     for path in self.shortest_paths:
-    #         result += (str(path) + " : " + str(self.shortest_paths[path]) + "\n")
-    #     return result
-    #
-    # def get_str_dis_graph(self):
-    #     result = ""
-    #     for node in self.dis_graph:
-    #         result += str(node) + " : " + str(self.dis_graph[node]) + "\n"
-    #     return result
-    #
-    # def get_str_node_names(self):
-    #     return str(list(self.nodes))
-
     def __str__(self):
         graph = "\n"
         for key in self.graph:
@@ -215,32 +191,51 @@ class CARP(object):
             new_route = []
             temp_capacity = 0
 
+            # 空时 假设上一个为 首尾都是出发点的 cost,demand 都是0的 demand
+            last_demand = [self.depot, self.depot, 0, 0]
             while temp_capacity < capacity:
-                founded = False
+                # 当前需求为第一个 当前距离为最大值，之后就算遍历第一个也会将距离修改过来
+                temp_demand = free[0]
+                temp_distance = sys.maxsize
+
+                found = False
                 for demand in free:
+                    # 所有满足条件的需求
                     if demand[3] + temp_capacity <= capacity:
-                        temp_capacity += demand[3]
-                        new_route.append(demand)
-                        founded = True
-                        break
-                if founded:
-                    free.remove(demand)
-                else:
+                        # 如果和上个需求首尾相接，直接加入
+                        if demand[0] == last_demand[1]:
+                            temp_capacity += demand[3]
+                            new_route.append(demand)
+                            last_demand = demand
+                            found = True
+                            break
+                        # 否则遍历比较 选择距离上个需求终点最近的需求
+                        elif paths[last_demand[1]][demand[0]]["distance"] < temp_distance:
+                            temp_demand = demand
+                            temp_distance = paths[last_demand[1]][demand[0]]["distance"]
+
+                if not found:
+                    temp_capacity += temp_demand[3]
+                    new_route.append(temp_demand)
+                    last_demand = temp_demand
+                    found = True
+
+                free.remove(last_demand)
+                if len(free) == 0:
                     break
             routes.append(new_route)
 
-        print("s",end=" ")
+        s=""
         # find path cost along route
         cost = 0
         for route in routes:
-            print(0,end=",")
+            s += "0,"
             for demand in route:
-                body = "("+ str(demand[0]) + "," + str(demand[1]) + "),"
-                print(body,end="")
+                s += "("+ str(demand[0]) + "," + str(demand[1]) + "),"
             if route == routes[len(routes)-1]:
-                print(end="0")
+                s += "0"
             else:
-                print(end="0,")
+                s += "0,"
 
             # deal with the first demand either start with depot or not
             if route[0][0] == self.depot:
@@ -261,26 +256,18 @@ class CARP(object):
                     cost += next_demand[2]
 
             #deal with the last one to depot
-            cost += paths[next_demand[1]][self.depot]["distance"]
-        print()
+            if next_demand[1] != self.depot:
+                cost += paths[next_demand[1]][self.depot]["distance"]
+        print("s",s)
         print("q",cost)
 
-    def __str__(self):
-        demands = "\n"
-        for key in self.demands:
-            demands += str(key) + " : " + str(self.demands[key]) + "\n"
-
-        shortest_paths = "\n"
-        for key in self.shortest_paths:
-            shortest_paths += str(key) + " : " + str(self.shortest_paths[key]) + "\n"
-
-if __name__ == '__main__':
-    info = []
+info = []
+temp = input()
+while temp != "END":
+    info.append(temp)
     temp = input()
 
-    while temp != "END":
-        info.append(temp)
-        temp = input()
+carp = CARP(info)
+carp.carp()
 
-    carp = CARP(info)
-    carp.carp()
+exit(0)
